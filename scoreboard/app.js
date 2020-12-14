@@ -1,18 +1,16 @@
-const title = React.createElement(
-  'h1',
-  {
-    id: 'main-title',
-    title: 'This is a title',
-  },
-  'My First React Element!'
-);
+const titleId = 'main-title';
 
-const description = React.createElement(
-  'p',
-  null,
-  'I just learned how to create a react node and render it into the DOM'
-);
+const description =
+  'I just learned how to create a react node and render it into the DOM</p>';
 
-const header = React.createElement('header', null, title, description);
+const name = 'Arkar';
+
+const header = (
+  <header>
+    {/* This is a JSX Comment */}
+    <h1 id={titleId}>{name}'s First React Element!</h1>
+    <p className="main-description">{description}</p>
+  </header>
+);
 
 ReactDOM.render(header, document.getElementById('root'));
