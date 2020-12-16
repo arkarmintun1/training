@@ -1,28 +1,32 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-export default class SearchForm extends Component {
-  handleSubmit = (e) => {
+const SearchForm = (props) => {
+  const [searchText, setSearchText] = useState('');
+
+  const handleTextChange = (e) => setSearchText(e.target.value);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    this.props.onSearch(this.query.value);
+    props.onSearch(searchText);
     e.currentTarget.reset();
   };
 
-  render() {
-    return (
-      <form className="search-form" onSubmit={this.handleSubmit}>
-        <label className="is-hidden" htmlFor="search">
-          Search
-        </label>
-        <input
-          type="search"
-          name="search"
-          placeholder="Search..."
-          ref={(input) => (this.query = input)}
-        />
-        <button type="submit" id="submit" className="search-button">
-          <i className="material-icons icn-search">search</i>
-        </button>
-      </form>
-    );
-  }
-}
+  return (
+    <form className="search-form" onSubmit={handleSubmit}>
+      <label className="is-hidden" htmlFor="search">
+        Search
+      </label>
+      <input
+        type="search"
+        name="search"
+        placeholder="Search..."
+        onChange={handleTextChange}
+      />
+      <button type="submit" id="submit" className="search-button">
+        <i className="material-icons icn-search">search</i>
+      </button>
+    </form>
+  );
+};
+
+export default SearchForm;
