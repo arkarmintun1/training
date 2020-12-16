@@ -1,77 +1,55 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
 const ScoreboardContext = React.createContext();
 
-class Provider extends Component {
-  state = {
-    players: [
-      {
-        name: 'Guil',
-        score: 0,
-        id: 1,
-      },
-      {
-        name: 'Treasure',
-        score: 0,
-        id: 2,
-      },
-      {
-        name: 'Ashley',
-        score: 0,
-        id: 3,
-      },
-      {
-        name: 'James',
-        score: 0,
-        id: 4,
-      },
-    ],
+let id = 0;
+
+const Provider = (props) => {
+  const [players, setPlayers] = useState([]);
+
+  const handleScoreChange = (index, delta) => {
+    setPlayers((prevState) => {
+      const updatedPlayers = [...prevState];
+      const updatedPlayer = { ...updatedPlayers[index] };
+
+      updatedPlayer.score += delta;
+      updatedPlayers[index] = updatedPlayer;
+
+      return updatedPlayers;
+    });
   };
 
-  prevPlayerId = 4;
-
-  handleAddPlayer = (name) => {
-    this.setState((prevState) => ({
-      players: [
-        ...prevState.players,
+  const handleAddPlayer = (name) => {
+    setPlayers((prevState) => {
+      return [
+        ...prevState,
         {
           name,
           score: 0,
-          id: (this.prevPlayerId += 1),
+          id: (id += 1),
         },
-      ],
-    }));
+      ];
+    });
   };
 
-  handleRemovePlayer = (id) => {
-    this.setState((prevState) => ({
-      players: prevState.players.filter((player) => player.id !== id),
-    }));
+  const handleRemovePlayer = (id) => {
+    setPlayers((prevState) => prevState.filter((player) => player.id !== id));
   };
 
-  handleScoreChange = (index, delta) => {
-    this.setState((prevState) => ({
-      score: (prevState.players[index].score += delta),
-    }));
-  };
+  return (
+    <ScoreboardContext.Provider
+      value={{
+        players,
+        actions: {
+          changeScore: handleScoreChange,
+          removePlayer: handleRemovePlayer,
+          addPlayer: handleAddPlayer,
+        },
+      }}
+    >
+      {props.children}
+    </ScoreboardContext.Provider>
+  );
+};
 
-  render() {
-    return (
-      <ScoreboardContext.Provider
-        value={{
-          players: this.state.players,
-          actions: {
-            changeScore: this.handleScoreChange,
-            removePlayer: this.handleRemovePlayer,
-            addPlayer: this.handleAddPlayer,
-          },
-        }}
-      >
-        {this.props.children}
-      </ScoreboardContext.Provider>
-    );
-  }
-}
-const Consumer = ScoreboardContext.Consumer;
-
-export { Provider, Consumer };
+export { ScoreboardContext, Provider };

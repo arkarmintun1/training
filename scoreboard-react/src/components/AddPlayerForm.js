@@ -1,30 +1,25 @@
-import React from 'react';
-import { Consumer } from './context';
+import React, { useContext, useRef } from 'react';
+import { ScoreboardContext } from './context';
 
 const AddPlayerForm = () => {
-  let playerInput = React.createRef();
+  const { actions } = useContext(ScoreboardContext);
+  const playerInput = useRef();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    actions.addPlayer(playerInput.current.value);
+    e.currentTarget.reset();
+  };
 
   return (
-    <Consumer>
-      {({ actions }) => {
-        let handleSubmit = (e) => {
-          e.preventDefault();
-          actions.addPlayer(playerInput.current.value);
-          e.currentTarget.reset();
-        };
-
-        return (
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              ref={playerInput}
-              placeholder="Enter a player's name"
-            />
-            <input type="submit" value="Add Player" />
-          </form>
-        );
-      }}
-    </Consumer>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        ref={playerInput}
+        placeholder="Enter a player's name"
+      />
+      <input type="submit" value="Add Player" />
+    </form>
   );
 };
 
